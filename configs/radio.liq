@@ -3,7 +3,7 @@ set("harbor.bind_addr", "0.0.0.0")
 silence = blank()
 
 autodj = playlist(
-  "/mnt/server/music",
+  "/home/container/music",
   reload_mode="watch"
 )
 
