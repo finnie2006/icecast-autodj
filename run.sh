@@ -8,4 +8,4 @@ set -e
 sleep 5
 
 # Start Liquidsoap
-/liquidsoap --verbose /home/container/radio.liq
+liquidsoap --verbose /home/container/radio.liq
