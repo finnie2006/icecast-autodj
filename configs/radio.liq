@@ -23,7 +23,7 @@ radio = nrj(source_chain)
 
 output.icecast(
   %mp3(
-    bitrate=160
+    bitrate=320
   ),
   host="localhost",
   port=8000,
