@@ -1,4 +1,3 @@
-let port = __PORT__
 set("harbor.bind_addr", "0.0.0.0")
 
 silence = blank()
@@ -10,7 +9,7 @@ autodj = playlist(
 
 live = input.harbor(
   "live",
-  port=port + 1,
+  port=8001,
   password="livepassword",
   user="source"
 )
@@ -27,7 +26,7 @@ output.icecast(
     bitrate=320
   ),
   host="localhost",
-  port=port,
+  port=8000,
   user="source",
   password="sourcepassword",
   mount="stream",
