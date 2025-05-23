@@ -1,6 +1,6 @@
 let port = __PORT__
 
-et("harbor.bind_addr", "0.0.0.0")
+set("harbor.bind_addr", "0.0.0.0")
 
 silence = blank()
 
