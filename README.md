@@ -18,6 +18,7 @@ Easily run your own internet radio station using **Icecast2** and **Liquidsoap**
 1. Import the egg into your **Pterodactyl** or **Pelican** panel.
 2. Deploy the server using the egg like any other.
 3. Configure your stream settings and upload music to start broadcasting.
+4. Creating your custom Liquidsoap config using https://www.liquidsoap.info/doc-2.3.2/
 
 ---
 
