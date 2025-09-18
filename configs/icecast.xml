@@ -1,12 +1,12 @@
 <icecast>
   <hostname>your.domain.or.ip</hostname>
   <location>Your Location</location>
+  <webroot>/usr/local/icecast/webroot</webroot>
+  <adminroot>/usr/local/icecast/admin</adminroot>
   <admin>your.email@domain.com</admin>
-
   <listen-socket>
     <port>8000</port>
   </listen-socket>
-
   <authentication>
     <source-password>sourcepassword</source-password>
     <relay-password>relaypassword</relay-password>
