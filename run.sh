@@ -1,57 +1,57 @@
 #!/bin/bash
 
-# Definieer de opruim-functie
+# Define the cleanup function
 cleanup() {
-    echo "[*] Stopsignaal ontvangen, bezig met afsluiten..."
+    echo "[*] Received stop signal, shutting down..."
     
-    # Stuur eerst een vriendelijk TERM-signaal
+    # First, send a friendly TERM signal
     kill -SIGTERM $LIQUIDSOAP_PID 2>/dev/null
     kill -SIGTERM $ICECAST_PID 2>/dev/null
     
-    # Geef de processen 2 seconden de tijd om netjes af te sluiten
+    # Give the processes 2 seconds to shut down gracefully
     sleep 2
     
-    # Controleer of er nog processen draaien en forceer ze dan te stoppen
-    echo "[*] Controleren op koppige processen..."
+    # Check if any processes are still running and force them to stop
+    echo "[*] Checking for stubborn processes..."
     if kill -0 $ICECAST_PID 2>/dev/null; then
-        echo "[!] Icecast (PID $ICECAST_PID) luisterde niet, bezig met geforceerd afsluiten (SIGKILL)..."
+        echo "[!] Icecast (PID $ICECAST_PID) did not respond, forcing shutdown (SIGKILL)..."
         kill -SIGKILL $ICECAST_PID 2>/dev/null
     fi
     if kill -0 $LIQUIDSOAP_PID 2>/dev/null; then
-        echo "[!] Liquidsoap (PID $LIQUIDSOAP_PID) luisterde niet, bezig met geforceerd afsluiten (SIGKILL)..."
+        echo "[!] Liquidsoap (PID $LIQUIDSOAP_PID) did not respond, forcing shutdown (SIGKILL)..."
         kill -SIGKILL $LIQUIDSOAP_PID 2>/dev/null
     fi
     
-    echo "[*] Alle processen zijn afgesloten."
+    echo "[*] All processes have been terminated."
     exit 0
 }
 
-# Zet een 'trap' op de signalen SIGINT en SIGTERM
+# Set a trap for the SIGINT and SIGTERM signals
 trap 'cleanup' SIGINT SIGTERM
 
-# Start Icecast op de achtergrond
+# Start Icecast in the background
 echo "[*] Starting Icecast2..."
 /usr/bin/icecast2 -c "/home/container/icecast.xml" &
 ICECAST_PID=$!
 
-# Wacht een paar seconden
+# Wait a few seconds
 echo "[*] Waiting for Icecast to initialize..."
 sleep 3
 
-# Start Liquidsoap op de achtergrond
+# Start Liquidsoap in the background
 echo "[*] Starting Liquidsoap..."
-/usr/bin/liquidsoap --verbose /home/container/radio.liq &
+/usr/bin/liquidsoap --verbose "/home/container/radio.liq" &
 LIQUIDSOAP_PID=$!
 
-# DEZE REGEL IS VOOR PTERODACTYL: Server is klaar met opstarten
+# THIS LINE IS FOR PTERODACTYL: Server is done starting
 echo "[AutoDJ Startup]: Server is online and ready!"
 
-# Blijf in een loop zolang beide processen nog draaien.
-# De 'trap' zal deze loop onderbreken voor een nette shutdown.
+# Keep looping as long as both processes are running.
+# The 'trap' will interrupt this loop for a clean shutdown.
 while kill -0 $ICECAST_PID 2>/dev/null && kill -0 $LIQUIDSOAP_PID 2>/dev/null; do
   sleep 1
 done
 
-# Als we hier komen, is een proces gecrasht. Ruim de rest ook op.
-echo "[*] Een van de hoofdprocessen is onverwacht gestopt. Bezig met opruimen..."
+# If we get here, a process has crashed. Clean up the rest.
+echo "[*] One of the main processes stopped unexpectedly. Cleaning up..."
 cleanup
